@@ -54,8 +54,8 @@ export const login = createAsyncThunk(
         { withCredentials: true }
       )
 
-      const user = res.data.user
-      const token = res.data.accessToken
+      const user = res.data.data.user
+      const token = res.data.data.accessToken
 
       // Only store accessToken in localStorage
       localStorage.setItem('accessToken', token)
@@ -96,16 +96,35 @@ export const fetchMe = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('accessToken')
-      const res = await axios.get(
+      const res = await axiosInstance.get(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/auth/user`,
         { headers: { Authorization: `Bearer ${token}` } }
       )
-      return res.data.user
+      return res.data.data
     } catch (error) {
       return rejectWithValue(error.response?.data || { message: 'Fetch user failed' })
     }
   }
 )
+
+export const refreshToken = createAsyncThunk(
+  'auth/refresh',
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/auth/refresh-token`,
+        {},
+        { withCredentials: true }
+      )
+      const token = res.data.data.accessToken
+      localStorage.setItem('accessToken', token)
+      return token
+    } catch (err) {
+      return rejectWithValue(err.response.data)
+    }
+  }
+)
+
 
 // ========================
 // 6️⃣ Initial State
@@ -114,7 +133,8 @@ const initialState = {
   user: null, // will be set by login or fetchMe
   accessToken: storeToken || null,
   loading: false,
-  error: null
+  error: null,
+  fetLoad: false
 }
 
 // ========================
@@ -203,19 +223,37 @@ const authSlice = createSlice({
     // ---- FetchMe ----
     builder
       .addCase(fetchMe.pending, (state) => {
-        state.loading = true
+        state.fetLoad = true
         state.error = null
       })
       .addCase(fetchMe.fulfilled, (state, action) => {
-        state.loading = false
+        state.fetLoad = false
         state.user = action.payload
       })
       .addCase(fetchMe.rejected, (state, action) => {
-        state.loading = false
+        state.fetLoad = false
         state.error = action.payload
         state.user = null
         state.accessToken = null
       })
+
+    //refresh Token
+    builder
+      .addCase(refreshToken.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(refreshToken.fulfilled, (state, action) => {
+        state.loading = false
+        state.accessToken = action.payload
+        state.authChecked = true
+      })
+      .addCase(refreshToken.rejected, (state, action) => {
+        state.loading = false
+        state.user = null
+        state.accessToken = null
+        state.authChecked = true
+      })
+
   }
 })
 

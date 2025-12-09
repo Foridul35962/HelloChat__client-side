@@ -5,19 +5,18 @@ import { ToastContainer } from 'react-toastify'
 import Login from './pages/Login'
 import Registration from './pages/Registration'
 import { useDispatch, useSelector } from 'react-redux'
+import { fetchMe, refreshToken } from './store/slices/authSlice'
 
 
 const ProtectedRoute = ({ children }) => {
-  const { accessToken, user } = useSelector(state => state.auth)
+  const { accessToken, user, fetLoad } = useSelector(state => state.auth)
 
-  if (!accessToken) {
-    // No token → redirect login
-    return <Navigate to="/login" />
+  if (!accessToken || fetLoad) {
+    return <p className="text-white">Checking authentication...</p>
   }
 
-  if (accessToken && !user) {
-    // Token exists but user not loaded yet
-    return <p>Loading...</p> // Or spinner/skeleton
+  if (!accessToken && !user) {
+    return <Navigate to="/login" />
   }
 
   return children
@@ -48,7 +47,9 @@ const App = () => {
   const { accessToken, user } = useSelector(state => state.auth)
 
   useEffect(() => {
-    if (accessToken && !user) {
+    if (!accessToken) {
+      dispatch(refreshToken())
+    } else if (accessToken && !user) {
       dispatch(fetchMe())
     }
   }, [accessToken, user, dispatch])
