@@ -62,9 +62,11 @@ const App = () => {
 
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px]"></div>
 
-      <div className="relative z-10 w-full p-4 flex flex-col items-center justify-center">
-        <RouterProvider router={router} />
-        <ToastContainer />
+      <div className='container mx-auto p-0 sm:p-5'>
+        <div className="relative z-10 w-full px-5 sm:p-5 flex flex-col items-center justify-center">
+          <RouterProvider router={router} />
+          <ToastContainer />
+        </div>
       </div>
 
     </div>
