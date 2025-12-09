@@ -27,11 +27,14 @@ const Registration = () => {
   const lengthValidate = /^(?=.{8,})/.test(passwordValue);
 
   const [verified, setVerified] = useState(false)
+  const [email, setEmail] = useState('')
 
-  const {loading, error} = useSelector((state)=>state.auth)
+  const { loading, error } = useSelector((state) => state.auth)
   const onSubmit = async (data) => {
     try {
       await dispatch(registration(data)).unwrap()
+      setEmail(data.email)
+      reset()
       setVerified(!verified)
     } catch (err) {
       toast.error(error.message)
@@ -41,8 +44,8 @@ const Registration = () => {
   return (
     <>
       {
-        verified ? <VerifyOtp /> :
-          <div className='bg-gray-800 rounded-2xl max-h-dvh w-full p-8 flex justify-between'>
+        verified ? <VerifyOtp email={email} /> :
+          <div className='bg-gray-800 rounded-2xl w-full p-8 flex justify-between'>
             <div className='w-full sm:w-1/2 flex flex-col justify-center items-center gap-5'>
               <h2 className='text-blue-400 text-2xl text-center'>Sign Up for a new account</h2>
               <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-2 w-full'>
@@ -63,7 +66,7 @@ const Registration = () => {
                   </div>
                   {
                     errors.fullName && (
-                      <p>{errors.fullName.message}</p>
+                      <p className='text-red-600'>{errors.fullName.message}</p>
                     )
                   }
                 </div>
@@ -89,7 +92,7 @@ const Registration = () => {
                   </div>
                   {
                     errors.email && (
-                      <p>{errors.email.message}</p>
+                      <p className='text-red-600'>{errors.email.message}</p>
                     )
                   }
                 </div>
@@ -99,49 +102,53 @@ const Registration = () => {
                     <input
                       type="password"
                       className='w-full border-blue-400 border rounded-xl py-1 pl-9 text-lg pr-1.5 text-blue-400'
-                      
+
                       placeholder='password'
                       {
-                        ...register('password', {
-                          required: 'password is required',
-                          minLength:{
-                            value: 8,
-                            message: "password must contain 8 characters"
-                          },
-                          pattern:{
-                            value: /^(?=.*\d)(?=.*[a-zA-Z])/,
-                            message: "password must include alphabet and number"
-                          }
-                        })
+                      ...register('password', {
+                        required: 'password is required',
+                        minLength: {
+                          value: 8,
+                          message: "password must contain 8 characters"
+                        },
+                        pattern: {
+                          value: /^(?=.*\d)(?=.*[a-zA-Z])/,
+                          message: "password must include alphabet and number"
+                        }
+                      })
                       }
                       id="password" />
                     <LockIcon className='absolute text-purple-600 left-1.5 top-1.5' />
                   </div>
                   {
                     errors.password && (
-                      <p>{errors.password.message}</p>
+                      <p className='text-red-600'>{errors.password.message}</p>
                     )
                   }
                 </div>
                 {/* password validation */}
-                <div className='flex flex-col *:flex *:gap-1 gap-1.5 py-3'>
+                <div className='flex flex-col *:flex *:gap-1 gap-1.5 py-3 *:items-center'>
                   <div className={`${alphabetValidate ? "text-green-600" : "text-white"}`}>
-                    {alphabetValidate ? <CircleCheckBig /> : <Circle /> } At least one Alphabet
+                    {alphabetValidate ? <CircleCheckBig /> : <Circle />} At least one Alphabet
                   </div>
                   <div className={`${numberValidate ? "text-green-600" : "text-white"}`}>
-                    {numberValidate ? <CircleCheckBig /> : <Circle /> } At least one number
+                    {numberValidate ? <CircleCheckBig /> : <Circle />} At least one number
                   </div>
                   <div className={`${lengthValidate ? "text-green-600" : "text-white"}`}>
-                    {lengthValidate ? <CircleCheckBig /> : <Circle /> } minimum lenght 8 characters
+                    {lengthValidate ? <CircleCheckBig /> : <Circle />} minimum lenght 8 characters
                   </div>
                 </div>
                 <button
-                type='submit'
-                disabled={loading}
-                className={`bg-cyan-400 py-1 rounded-xl hover:bg-cyan-500 cursor-pointer active:bg-cyan-800 flex justify-center items-center ${loading && 'bg-cyan-800'}`}
+                  type='submit'
+                  disabled={loading}
+                  className={`w-full py-2 rounded-xl flex justify-center items-center font-semibold text-black transition-all duration-200 ${loading
+                    ? 'bg-cyan-800 cursor-not-allowed opacity-70'
+                    : 'bg-cyan-400 hover:bg-cyan-500 active:bg-cyan-700 cursor-pointer'
+                    }`
+                  }
                 >
-                  {loading ? <LoaderIcon className="animate-spin" /> : 'Registration'}
-                  </button>
+                  {loading ? <LoaderIcon className="animate-spin w-5 h-5" /> : 'Registration'}
+                </button>
               </form>
               <p className='text-white'>Already has an account? <span className='text-blue-500 hover:underline cursor-pointer' onClick={() => navigate('/login')}>login</span></p>
             </div>

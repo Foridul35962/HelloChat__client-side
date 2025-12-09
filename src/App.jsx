@@ -6,6 +6,42 @@ import Login from './pages/Login'
 import Registration from './pages/Registration'
 import { useDispatch, useSelector } from 'react-redux'
 
+
+const ProtectedRoute = ({ children }) => {
+  const { accessToken, user } = useSelector(state => state.auth)
+
+  if (!accessToken) {
+    // No token → redirect login
+    return <Navigate to="/login" />
+  }
+
+  if (accessToken && !user) {
+    // Token exists but user not loaded yet
+    return <p>Loading...</p> // Or spinner/skeleton
+  }
+
+  return children
+}
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: (
+      <ProtectedRoute>
+        <Home />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: '/login',
+    element: <Login />
+  },
+  {
+    path: '/registration',
+    element: <Registration />
+  }
+])
+
 const App = () => {
 
   const dispatch = useDispatch()
@@ -16,41 +52,6 @@ const App = () => {
       dispatch(fetchMe())
     }
   }, [accessToken, user, dispatch])
-
-  const ProtectedRoute = ({ children }) => {
-    const { accessToken, user } = useSelector(state => state.auth)
-
-    if (!accessToken) {
-      // No token → redirect login
-      return <Navigate to="/login" />
-    }
-
-    if (accessToken && !user) {
-      // Token exists but user not loaded yet
-      return <p>Loading...</p> // Or spinner/skeleton
-    }
-
-    return children
-  }
-
-  const router = createBrowserRouter([
-    {
-      path: '/',
-      element: (
-        <ProtectedRoute>
-          <Home />
-        </ProtectedRoute>
-      )
-    },
-    {
-      path: '/login',
-      element: <Login />
-    },
-    {
-      path: '/registration',
-      element: <Registration />
-    }
-  ])
 
   return (
     <div className="min-h-screen relative flex items-center justify-center overflow-hidden bg-gray-950 w-full">
@@ -63,7 +64,7 @@ const App = () => {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px]"></div>
 
       <div className='container mx-auto p-0 sm:p-5'>
-        <div className="relative z-10 w-full px-5 sm:p-5 flex flex-col items-center justify-center">
+        <div className="relative z-10 w-full p-5 sm:p-5 flex flex-col items-center justify-center">
           <RouterProvider router={router} />
           <ToastContainer />
         </div>
