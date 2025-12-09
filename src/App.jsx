@@ -1,23 +1,53 @@
-import React from 'react'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import Home from './pages/Home'
 import { ToastContainer } from 'react-toastify'
 import Login from './pages/Login'
 import Registration from './pages/Registration'
+import { useDispatch, useSelector } from 'react-redux'
 
 const App = () => {
+
+  const dispatch = useDispatch()
+  const { accessToken, user } = useSelector(state => state.auth)
+
+  useEffect(() => {
+    if (accessToken && !user) {
+      dispatch(fetchMe())
+    }
+  }, [accessToken, user, dispatch])
+
+  const ProtectedRoute = ({ children }) => {
+    const { accessToken, user } = useSelector(state => state.auth)
+
+    if (!accessToken) {
+      // No token → redirect login
+      return <Navigate to="/login" />
+    }
+
+    if (accessToken && !user) {
+      // Token exists but user not loaded yet
+      return <p>Loading...</p> // Or spinner/skeleton
+    }
+
+    return children
+  }
 
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <Home />
+      element: (
+        <ProtectedRoute>
+          <Home />
+        </ProtectedRoute>
+      )
     },
     {
       path: '/login',
       element: <Login />
     },
     {
-      path: 'registration',
+      path: '/registration',
       element: <Registration />
     }
   ])
