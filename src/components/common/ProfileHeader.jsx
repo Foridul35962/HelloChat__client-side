@@ -5,7 +5,9 @@ import { toast } from 'react-toastify'
 import { LogOut, Volume2, VolumeOff } from 'lucide-react'
 import { logout, updateProfile } from '../../store/slices/authSlice'
 import { toggleSound } from '../../store/slices/messageSlice'
+import clickSound from '../../assets/Audio/mouse-click.mp3'
 
+const mouseClickSound = new Audio(clickSound)
 const ProfileHeader = () => {
 
     const dispatch = useDispatch()
@@ -43,6 +45,12 @@ const ProfileHeader = () => {
         }
     }
 
+    const handleToggleSound = ()=>{
+        mouseClickSound.currentTime = 0
+        mouseClickSound.play().catch((error)=>console.log('audio play failed',error))
+        dispatch(toggleSound())
+    }
+
     return (
         <div className='flex justify-between items-center text-white'>
             <div className='flex gap-3 items-center'>
@@ -73,7 +81,7 @@ const ProfileHeader = () => {
             </div>
             <div className='flex gap-2'>
                 <LogOut onClick={handleLogOut} className='cursor-pointer' />
-                <div className='cursor-pointer' onClick={() => dispatch(toggleSound())}>{isSoundEnabled ? <Volume2 /> : <VolumeOff />}</div>
+                <div className='cursor-pointer' onClick={handleToggleSound}>{isSoundEnabled ? <Volume2 /> : <VolumeOff />}</div>
             </div>
         </div>
     )
