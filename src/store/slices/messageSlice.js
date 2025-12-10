@@ -93,7 +93,7 @@ const messageSlice = createSlice({
         })
         .addCase(getAllContacts.fulfilled, (state, action)=>{
             state.loading = false,
-            state.allContacts = action.payload
+            state.allContacts = action.payload.data
         })
         .addCase(getAllContacts.rejected, (state, action)=>{
             state.loading = false,
@@ -108,7 +108,7 @@ const messageSlice = createSlice({
         })
         .addCase(getChatPartners.fulfilled, (state, action)=>{
             state.loading = false,
-            state.chatPartners = action.payload
+            state.chatPartners = action.payload.data
         })
         .addCase(getChatPartners.rejected, (state, action)=>{
             state.loading = false
