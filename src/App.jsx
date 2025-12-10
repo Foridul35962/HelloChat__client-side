@@ -6,13 +6,14 @@ import Login from './pages/Login'
 import Registration from './pages/Registration'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchMe, refreshToken } from './store/slices/authSlice'
+import { LoaderIcon } from 'lucide-react'
 
 
 const ProtectedRoute = ({ children }) => {
-  const { accessToken, user, fetLoad } = useSelector(state => state.auth)
+  const { accessToken, user, fetLoad, authChecked } = useSelector(state => state.auth)
 
-  if (!accessToken || fetLoad) {
-    return <p className="text-white">Checking authentication...</p>
+  if (!authChecked || fetLoad) {
+    return <LoaderIcon className="animate-spin size-20 text-white" />
   }
 
   if (!accessToken && !user) {
