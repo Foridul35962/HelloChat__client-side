@@ -17,9 +17,9 @@ const Login = () => {
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const {loading, error, user} = useSelector((state)=>state.auth)
+  const { loading, error, user } = useSelector((state) => state.auth)
 
-  const onSubmit = async (data)=>{
+  const onSubmit = async (data) => {
     try {
       await dispatch(login(data)).unwrap()
       reset()
@@ -54,7 +54,7 @@ const Login = () => {
               <MailIcon className='absolute text-purple-600 left-1.5 top-1.5' />
             </div>
             {
-              errors.email &&(
+              errors.email && (
                 <p className='text-red-600'>{errors.email.message}</p>
               )
             }
