@@ -75,7 +75,7 @@ export const logout = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await axiosInstance.post(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/logout`,
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/auth/logout`,
         {},
         { withCredentials: true }
       )
@@ -125,6 +125,26 @@ export const refreshToken = createAsyncThunk(
   }
 )
 
+export const updateProfile = createAsyncThunk(
+  "auth/update-profile",
+  async (formData, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.patch(`${import.meta.env.VITE_SERVER_URL}/api/v1/auth/update-profile`,
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        }
+      )
+      return res.data
+    } catch (error) {
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 
 // ========================
 // 6️⃣ Initial State
@@ -134,7 +154,8 @@ const initialState = {
   accessToken: storeToken || null,
   loading: false,
   error: null,
-  fetLoad: false
+  fetLoad: false,
+  authChecked: false
 }
 
 // ========================
@@ -214,6 +235,7 @@ const authSlice = createSlice({
         state.loading = false
         state.user = null
         state.accessToken = null
+        state.authChecked = true
       })
       .addCase(logout.rejected, (state, action) => {
         state.loading = false
@@ -229,6 +251,7 @@ const authSlice = createSlice({
       .addCase(fetchMe.fulfilled, (state, action) => {
         state.fetLoad = false
         state.user = action.payload
+        state.authChecked = true
       })
       .addCase(fetchMe.rejected, (state, action) => {
         state.fetLoad = false
@@ -240,20 +263,33 @@ const authSlice = createSlice({
     //refresh Token
     builder
       .addCase(refreshToken.pending, (state) => {
-        state.loading = true
+        state.fetLoad = true
       })
       .addCase(refreshToken.fulfilled, (state, action) => {
-        state.loading = false
+        state.fetLoad = false
         state.accessToken = action.payload
         state.authChecked = true
       })
-      .addCase(refreshToken.rejected, (state, action) => {
-        state.loading = false
+      .addCase(refreshToken.rejected, (state) => {
+        state.fetLoad = false
         state.user = null
         state.accessToken = null
         state.authChecked = true
       })
 
+    //update profile
+    builder
+      .addCase(updateProfile.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.loading = false
+        state.user = action.payload.data
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload
+      })
   }
 })
 
