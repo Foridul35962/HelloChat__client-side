@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import avatar from '../../assets/avatar.png'
 import Dot from '../../assets/dot.png'
 import { useDispatch, useSelector } from 'react-redux'
-import { getChatPartners } from '../../store/slices/messageSlice'
+import { getChatPartners, setSelectedUser } from '../../store/slices/messageSlice'
 import LoadingSkeleton from '../common/LoadingSkeleton'
 import NoChatsFound from '../common/NoChatsFound'
 
@@ -25,7 +25,7 @@ const ChatList = ({ activeTab }) => {
       {
         loading ? <LoadingSkeleton /> : chatPartners.length === 0 ? <NoChatsFound /> :
           chatPartners.map((chatPartner, idx) => (
-            <div key={idx} className='flex flex-col gap-2 text-white'>
+            <div key={idx} className='flex flex-col gap-2 text-white cursor-pointer' onClick={() => dispatch(setSelectedUser(chatPartner))}>
               <div className='flex gap-2 items-center bg-gray-900 rounded-xl px-1 py-1.5'>
                 <div className='relative'>
                   <img src={chatPartner?.profilePic?.url || avatar} alt="img" className='size-10 rounded-full object-cover' />
