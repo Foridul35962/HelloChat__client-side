@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import VerifyOtp from './VerifyOtp'
 import { LockIcon, MailIcon, UserIcon, LoaderIcon, Circle, CircleCheckBig } from "lucide-react";
 import { useForm } from 'react-hook-form'
@@ -29,7 +29,14 @@ const Registration = () => {
   const [verified, setVerified] = useState(false)
   const [email, setEmail] = useState('')
 
-  const { loading, error } = useSelector((state) => state.auth)
+  const { loading, error, accessToken } = useSelector((state) => state.auth)
+
+  useEffect(()=>{
+    if (accessToken) {
+      navigate('/')
+    }
+  },[])
+
   const onSubmit = async (data) => {
     try {
       await dispatch(registration(data)).unwrap()
@@ -44,7 +51,7 @@ const Registration = () => {
   return (
     <>
       {
-        verified ? <VerifyOtp email={email} /> :
+        verified ? <VerifyOtp email={email} /> : !accessToken &&
           <div className='bg-gray-800 rounded-2xl w-full p-8 flex justify-between'>
             <div className='w-full sm:w-1/2 flex flex-col justify-center items-center gap-5'>
               <h2 className='text-blue-400 text-2xl text-center'>Sign Up for a new account</h2>

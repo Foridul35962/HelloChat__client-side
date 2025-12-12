@@ -189,6 +189,7 @@ const authSlice = createSlice({
       })
       .addCase(registration.fulfilled, (state) => {
         state.loading = false
+        state.accessToken = null
       })
       .addCase(registration.rejected, (state, action) => {
         state.loading = false
