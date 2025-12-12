@@ -26,31 +26,56 @@ const VerifyOtp = ({ email }) => {
         }
     }
     return (
-        <div className='bg-gray-800 rounded-2xl w-full sm:w-1/2 p-8 flex justify-between'>
-            <div className='w-full flex flex-col justify-center items-center gap-5'>
-                <h2 className='text-blue-400 text-3xl text-center'>Verify Otp</h2>
-                <form onSubmit={handleSubmit} className='flex flex-col gap-2 w-full'>
+        <div className="bg-gray-900 rounded-2xl w-full sm:w-1/2 p-8 shadow-lg border border-gray-700">
+            <div className="w-full flex flex-col justify-center items-center gap-6">
+
+                {/* Heading */}
+                <h2 className="text-cyan-400 text-3xl font-bold text-center">
+                    Verify OTP
+                </h2>
+
+                {/* Added message */}
+                <p className="text-gray-400 text-center text-sm px-6">
+                    An OTP has been sent <span className='font-bold'>{email}</span>. Please check your inbox and enter the code below.
+                </p>
+
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
+
+                    {/* OTP Input */}
                     <input
                         type="number"
-                        className='w-full border-blue-400 border rounded-xl py-1 px-2 text-center font-sans tracking-widest font-semibold text-lg text-blue-400'
-                        placeholder='Enter Otp'
-                        name='otp'
+                        id="otp"
+                        name="otp"
                         required
-                        id="opt" />
+                        placeholder="Enter OTP"
+                        className="w-full bg-gray-800 border border-gray-600 rounded-xl py-3 px-4 text-center 
+                   text-lg tracking-widest font-semibold text-cyan-300
+                   focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent 
+                   transition-all"
+                    />
+
+                    {/* Submit button */}
                     <button
-                        type='submit'
+                        type="submit"
                         disabled={loading}
-                        className={`w-full py-2 rounded-xl flex justify-center items-center font-semibold text-black transition-all duration-200 ${loading
-                            ? 'bg-cyan-800 cursor-not-allowed opacity-70'
-                            : 'bg-cyan-400 hover:bg-cyan-500 active:bg-cyan-700 cursor-pointer'
+                        className={`w-full py-3 rounded-xl flex justify-center items-center font-semibold text-black text-lg transition-all duration-200
+                            ${loading
+                                ? "bg-cyan-800 cursor-not-allowed opacity-70"
+                                : "bg-cyan-400 hover:bg-cyan-500 active:bg-cyan-700 cursor-pointer shadow-md"
                             }`
                         }
                     >
-                        {loading ? <LoaderIcon className="animate-spin w-5 h-5" /> : 'Verify Email'}
+                        {loading ? (
+                            <LoaderIcon className="animate-spin w-6 h-6 text-white" />
+                        ) : (
+                            "Verify Email"
+                        )}
                     </button>
+
                 </form>
             </div>
         </div>
+
     )
 }
 
