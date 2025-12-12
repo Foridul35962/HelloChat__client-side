@@ -17,7 +17,7 @@ const Home = () => {
     <>
       {
         !user ? <LoaderIcon className="animate-spin size-20 text-white" /> :
-          <div className='bg-gray-800 rounded-2xl h-[86vh] w-full p-2 md:p-8 flex gap-2'>
+          <div className='bg-gray-800 rounded-2xl h-[86vh] w-full p-4 md:p-8 flex gap-2'>
             {/* left side */}
             <div className={`${selectedUser && 'hidden md:flex w-full'} w-full md:w-1/3 flex flex-col gap-2.5 overflow-y-scroll custom-scrollbar`}>
               {/* profile header */}
