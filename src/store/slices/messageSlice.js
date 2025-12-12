@@ -62,7 +62,7 @@ const initialState = {
   chatPartners: [],
   activeTab: "chats",
   selectedUser: null,
-  isUserLoading: false,
+  sendMessageLoading: false,
   isMessagesLoading: false,
   isSoundEnabled: localStorage.getItem("isSoundEnabled") ? localStorage.getItem("isSoundEnabled")=== 'true' : 'true',
 };
@@ -118,30 +118,30 @@ const messageSlice = createSlice({
     //get messages by user id
     builder
         .addCase(getMessagesByUserId.pending, (state)=>{
-            state.loading = true,
+            state.isMessagesLoading = true,
             state.error = null
         })
         .addCase(getMessagesByUserId.fulfilled, (state, action)=>{
-            state.loading = false
-            state.messages = action.payload
+            state.isMessagesLoading = false
+            state.messages = action.payload.data
         })
         .addCase(getMessagesByUserId.rejected, (state, action)=>{
-            state.loading = false
+            state.isMessagesLoading = false
             state.error = action.payload
         })
 
     //send message
     builder
         .addCase(sendMessage.pending, (state)=>{
-            state.loading = true
+            state.sendMessageLoading = true
             state.error = null
         })
         .addCase(sendMessage.fulfilled, (state, action)=>{
-            state.loading = false
-            state.messages = action.payload
+            state.sendMessageLoading = false
+            state.messages = [... state.messages, action.payload.data]
         })
         .addCase(sendMessage.rejected, (state, action)=>{
-            state.loading = false
+            state.sendMessageLoading = false
             state.error = action.payload
         })
   }

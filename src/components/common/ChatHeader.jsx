@@ -8,8 +8,6 @@ import { setSelectedUser } from '../../store/slices/messageSlice'
 const ChatHeader = () => {
     const dispatch = useDispatch()
     const { selectedUser } = useSelector((state) => state.message)
-    console.log(selectedUser);
-
     return (
         <div className='w-full flex items-center justify-between bg-gray-900 px-2 py-1 rounded-xl'>
             <div className='flex items-center gap-2.5'>

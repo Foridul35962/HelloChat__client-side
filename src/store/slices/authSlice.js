@@ -258,7 +258,7 @@ const authSlice = createSlice({
         state.fetLoad = false
         state.error = action.payload
         state.user = null
-        state.accessToken = null
+        // state.accessToken = null
       })
 
     //refresh Token

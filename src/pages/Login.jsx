@@ -24,7 +24,7 @@ const Login = () => {
     if (accessToken) {
       navigate('/')
     }
-  }, [])
+  }, [accessToken])
 
   const onSubmit = async (data) => {
     try {

@@ -35,7 +35,7 @@ const Registration = () => {
     if (accessToken) {
       navigate('/')
     }
-  },[])
+  },[accessToken])
 
   const onSubmit = async (data) => {
     try {
