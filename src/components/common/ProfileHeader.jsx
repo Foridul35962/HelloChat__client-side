@@ -6,6 +6,7 @@ import { LogOut, Volume2, VolumeOff } from 'lucide-react'
 import { logout, updateProfile } from '../../store/slices/authSlice'
 import { toggleSound } from '../../store/slices/messageSlice'
 import clickSound from '../../assets/Audio/mouse-click.mp3'
+import { disconnectSocket } from '../../store/slices/socketSlice'
 
 const mouseClickSound = new Audio(clickSound)
 const ProfileHeader = () => {
@@ -19,6 +20,7 @@ const ProfileHeader = () => {
         if (window.confirm('Are you want to logged out your self?')) {
             try {
                 await dispatch(logout()).unwrap()
+                dispatch(disconnectSocket())
                 toast.success('log out successfully')
             } catch (error) {
                 toast.error(error.message)
