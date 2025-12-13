@@ -83,6 +83,10 @@ const messageSlice = createSlice({
     setSelectedUser: (state, action) => {
       state.selectedUser = action.payload;
     },
+
+    setMessages: (state, action) => {
+      state.messages = action.payload;
+    },
   },
   extraReducers: (builder)=>{
     //get all contacts
@@ -147,7 +151,6 @@ const messageSlice = createSlice({
   }
 });
 
-export const { toggleSound, setActiveTab, setSelectedUser } =
-  messageSlice.actions;
+export const { toggleSound, setActiveTab, setSelectedUser, setMessages } = messageSlice.actions;
 
 export default messageSlice.reducer;

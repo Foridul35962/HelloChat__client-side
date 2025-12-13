@@ -14,17 +14,17 @@ const ChatContent = ({ messages }) => {
 
   return (
     <div className="w-full flex flex-col gap-3 p-3 overflow-y-auto custom-scrollbar h-full">
-      {messages?.map((msg, idx) => {
+      {messages?.map((msg) => {
         const isSender = msg.senderId === user?._id
 
         return (
           <div
-            key={idx}
+            key={msg._id}
             className={`w-full flex ${isSender ? 'justify-end' : 'justify-start'}`}
           >
             <div
               className={`max-w-xs sm:max-w-sm md:max-w-md p-3 rounded-2xl shadow
-                ${isSender ? 'bg-blue-600 text-white rounded-br-none' : 'bg-gray-200 text-black rounded-bl-none'}`}
+                ${isSender ? 'bg-blue-600 text-white rounded-br-none' : 'bg-gray-700 text-white rounded-bl-none'}`}
             >
               {msg.text && <p className="whitespace-pre-wrap wrap-break-word">{msg.text}</p>}
               {msg.image && (

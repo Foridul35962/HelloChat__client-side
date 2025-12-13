@@ -6,20 +6,30 @@ import SendMessage from '../common/SendMessage'
 import { getMessagesByUserId } from '../../store/slices/messageSlice'
 import NoChatHistoryPlaceholder from '../common/NoChatHistoryPlaceholder'
 import { LoaderIcon } from 'lucide-react'
+import { subscribeToMessages, unsubscribeFromMessages } from '../../store/slices/socketSlice'
 
 const Conversation = () => {
     const dispatch = useDispatch()
     const { selectedUser, messages, isMessagesLoading } = useSelector((state) => state.message)
     useEffect(() => {
-        const getMessage = async () => {
+        const fetchMessages = async () => {
             try {
-                await dispatch(getMessagesByUserId(selectedUser?._id)).unwrap()
+                if (!selectedUser) return
+                await dispatch(getMessagesByUserId(selectedUser._id)).unwrap()
+                dispatch(subscribeToMessages())
             } catch (error) {
-                console.log(error);
+                console.log(error)
             }
         }
-        getMessage()
+
+        fetchMessages()
+
+        // cleanup function
+        return () => {
+            dispatch(unsubscribeFromMessages())
+        }
     }, [dispatch, selectedUser])
+
     return (
         <>
             {
