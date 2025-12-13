@@ -6,6 +6,7 @@ import Login from './pages/Login'
 import Registration from './pages/Registration'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchMe, refreshToken } from './store/slices/authSlice'
+import { connectSocket } from './store/slices/socketSlice'
 import { LoaderIcon } from 'lucide-react'
 
 
@@ -54,6 +55,12 @@ const App = () => {
       dispatch(fetchMe())
     }
   }, [accessToken, user, dispatch])
+
+  useEffect(() => {
+    if (user && accessToken) {
+      dispatch(connectSocket())
+    }
+  }, [user, accessToken, dispatch])
 
   return (
     <div className="min-h-screen relative flex items-center justify-center overflow-hidden bg-gray-950 w-full">

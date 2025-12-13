@@ -6,6 +6,8 @@ import { login } from '../store/slices/authSlice'
 import { toast } from 'react-toastify'
 import logInImg from '../assets/login.png'
 import { useEffect } from 'react'
+import { connectSocket } from '../store/slices/socketSlice'
+import { initSocketListeners } from '../store/slices/socketListeners'
 
 const Login = () => {
 
@@ -29,6 +31,8 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       await dispatch(login(data)).unwrap()
+      await dispatch(connectSocket()).unwrap()
+      initSocketListeners(dispatch)
       reset()
       toast.success('user loggedIn successfully')
       navigate('/')

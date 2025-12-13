@@ -9,6 +9,7 @@ import NoChatsFound from '../common/NoChatsFound'
 const ChatList = ({ activeTab }) => {
   const dispatch = useDispatch()
   const { chatPartners, loading } = useSelector((state) => state.message)
+  const { onlineUsers } = useSelector((state) => state.socket)
   useEffect(() => {
     const showPartners = async () => {
       try {
@@ -29,7 +30,7 @@ const ChatList = ({ activeTab }) => {
               <div className='flex gap-2 items-center bg-gray-900 rounded-xl px-1 py-1.5'>
                 <div className='relative'>
                   <img src={chatPartner?.profilePic?.url || avatar} alt="img" className='size-10 rounded-full object-cover' />
-                  <img src={Dot} alt="active" className='text-green-600 size-3 absolute top-0 right-0' />
+                  {onlineUsers.includes(chatPartner._id) && <img src={Dot} alt="active" className='text-green-600 size-3 absolute top-0 right-0' />}
                 </div>
                 <p className='font-semibold'>{chatPartner?.fullName}</p>
               </div>
