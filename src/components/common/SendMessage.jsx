@@ -3,10 +3,13 @@ import React, { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify'
 import { sendMessage } from '../../store/slices/messageSlice';
+import sendMessageSound from '../../assets/Audio/keystroke1.mp3'
+
+const messageSound = new Audio(sendMessageSound)
 
 const SendMessage = () => {
   const dispatch = useDispatch()
-  const { selectedUser, sendMessageLoading } = useSelector((state) => state.message)
+  const { selectedUser, sendMessageLoading, isSoundEnabled } = useSelector((state) => state.message)
 
   const [message, setMessage] = useState('');
   const [image, setImage] = useState(null);
@@ -29,6 +32,12 @@ const SendMessage = () => {
     formData.append('message', message)
 
     try {
+      //sound effect
+      if (isSoundEnabled) {
+        messageSound.currentTime = 0
+        messageSound.play().catch((error)=>console.log('audio play failed',error))
+      }
+      
       await dispatch(sendMessage({ id: selectedUser._id, message: formData})).unwrap()
     } catch (error) {
       toast.error(error)
