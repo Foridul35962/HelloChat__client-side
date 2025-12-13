@@ -44,7 +44,7 @@ const Home = () => {
               </div>
             </div>
             {/* right side */}
-            <div className={`w-2/3 md:pl-6 md:border-l md:border-gray-600 ${selectedUser? 'block w-full md:w-2/3' : 'hidden md:block'}`}>
+            <div className={`md:pl-6 md:border-l md:border-gray-600 ${selectedUser? 'block w-full md:w-2/3' : 'hidden md:block'} h-full min-h-0`}>
               {selectedUser ? <Conversation /> : <NoConversationPlaceholder />}
             </div>
           </div>}

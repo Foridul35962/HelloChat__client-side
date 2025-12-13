@@ -1,11 +1,19 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 const ChatContent = ({ messages }) => {
   const { user } = useSelector((state) => state.auth)
 
+  const messageEndRef = useRef(null)
+
+  useEffect(()=>{
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({behavior: "smooth"})
+    }
+  },[messages])
+
   return (
-    <div className="w-full flex flex-col gap-3 p-3 overflow-y-auto custom-scrollbar flex-1">
+    <div className="w-full flex flex-col gap-3 p-3 overflow-y-auto custom-scrollbar h-full">
       {messages?.map((msg, idx) => {
         const isSender = msg.senderId === user?._id
 
@@ -35,6 +43,7 @@ const ChatContent = ({ messages }) => {
           </div>
         )
       })}
+      <div ref={messageEndRef}/>
     </div>
   )
 }

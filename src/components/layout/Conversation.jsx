@@ -24,11 +24,11 @@ const Conversation = () => {
         <>
             {
                 selectedUser && (
-                    <div className="flex flex-col h-full">
+                    <div className="flex flex-col h-full min-h-0">
                         <div>
                             <ChatHeader />
                         </div>
-                        <div className="flex-1 overflow-y-auto">
+                        <div className="flex flex-col flex-1 min-h-0">
                             {
                                 isMessagesLoading ?
                                     <div className='w-full h-full flex items-center justify-center'>
